@@ -1,10 +1,12 @@
 {
   "name": "roadmap_at",
+  "homepage": "http://evvn.github.io/roadmap_at",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
     "airtable": "^0.7.1",
     "axios": "^0.19.0",
+    "gh-pages": "^2.1.1",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
     "react-redux": "^7.1.1",
@@ -16,6 +18,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "predeploy": "react-scripts build",
+    "deploy": "gh-pages -d build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
