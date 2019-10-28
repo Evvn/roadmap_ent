@@ -21,7 +21,11 @@ const formatRoadmap = roadmap => {
     typeof roadmapGrouped[record.fields.theme] === "undefined" &&
       (roadmapGrouped[record.fields.theme] = {
         theme: record.fields.theme,
-        epics: []
+        epics: [],
+        id: record.fields.theme
+          .toLowerCase()
+          .split(" ")
+          .join("")
       });
 
     return roadmapGrouped[record.fields.theme].epics.push(record);
