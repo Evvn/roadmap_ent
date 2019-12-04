@@ -32,8 +32,8 @@ const Theme = styled.div`
 `;
 
 const ThemeTitle = styled.h2`
-  font-family: "Muli SemiBold", "Helvetica", sans-serif;
-  font-weight: 900;
+  font-family: "Muli", "Helvetica", sans-serif;
+  font-weight: 600;
   font-size: 18px;
   margin: 0;
   padding: 10px;
@@ -363,7 +363,7 @@ class Roadmap extends React.Component {
   render() {
     const { roadmap } = this.props;
     const { hoverEpic } = this.state;
-    console.log(roadmap);
+    !!roadmap && console.log(roadmap);
 
     return (
       <RoadmapCont id="roadmapcont">

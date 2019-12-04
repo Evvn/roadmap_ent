@@ -5,6 +5,7 @@ import { bindActionCreators } from "redux";
 import * as actions from "./airtable/actions/actions.js";
 import styled from "styled-components";
 import Roadmap from "./components/Roadmap/Roadmap";
+import { GoogleLogin } from "react-google-login";
 
 const colorMint = "#21b778";
 const colorSaffron = "#f05e2f";
@@ -31,7 +32,8 @@ const HeaderCont = styled.div`
 `;
 
 const Title = styled.h1`
-  font-family: "Muli Light", "Helvetica", sans-serif;
+  font-family: "Muli", "Helvetica", sans-serif;
+  font-weight: 400;
   font-size: 18px;
   margin: 0;
   padding: 0;
@@ -110,7 +112,8 @@ class App extends React.Component {
     super(props);
 
     this.state = {
-      password: false
+      password: false,
+      isSignedIn: false
     };
   }
 
@@ -173,16 +176,28 @@ class App extends React.Component {
         </HeaderCont>
         {!isLoading ? (
           !roadmap && (
-            <ControlsCont>
-              <Password onChange={e => this.checkPassword(e)} />
-              <Generator
-                onClick={() => {
-                  this.roadmapBtnClick();
-                }}
-              >
-                Go!
-              </Generator>
-            </ControlsCont>
+            // <ControlsCont>
+            //   <Password onChange={e => this.checkPassword(e)} />
+            //   <Generator
+            //     onClick={() => {
+            //       this.roadmapBtnClick();
+            //     }}
+            //   >
+            //     Go!
+            //   </Generator>
+            // </ControlsCont>
+
+            <GoogleLogin
+              clientId="184313280711.apps.googleusercontent.com"
+              buttonText="Login"
+              onSuccess={() => {
+                console.log("win");
+              }}
+              onFailure={() => {
+                console.log("fail");
+              }}
+              cookiePolicy={"single_host_origin"}
+            />
           )
         ) : (
           <ControlsCont>
@@ -202,10 +217,7 @@ const mapStateToProps = state => ({
   isLoading: state.airtable.isLoading
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);
 
 // notes from chris & design pow wow
 
