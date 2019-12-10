@@ -1,11 +1,12 @@
 {
   "name": "roadmap_at",
-  "homepage": "http://evvn.github.io/roadmap_at",
+  "nohomepage": "http://evvn.github.io/roadmap_at",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "airtable": "^0.7.1",
+    "airtable": "^0.7.2",
     "axios": "^0.19.0",
+    "gapi-script": "^1.0.1",
     "gh-pages": "^2.1.1",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",

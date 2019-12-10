@@ -5,7 +5,19 @@ import { bindActionCreators } from "redux";
 import * as actions from "./airtable/actions/actions.js";
 import styled from "styled-components";
 import Roadmap from "./components/Roadmap/Roadmap";
-import { GoogleLogin } from "react-google-login";
+import GoogleLogin from "react-google-login";
+// import { gapi } from "gapi-script";
+
+// https://developers.google.com/identity/sign-in/web/reference#users
+// gapi.auth2.ClientConfig
+// hosted_domain	string	The G Suite domain to which users must belong to sign in. This is susceptible to modification by clients, so be sure to verify the hosted domain property of the returned user. Use GoogleUser.getHostedDomain() on the client, and the hd claim in the ID Token on the server to verify the domain is what you expected.
+// You must request the 'email' scope when using this parameter alongside fetch_basic_profile: false.
+
+// GoogleUser.getHostedDomain()
+// Get the user's G Suite domain if the user signed in with a G Suite account.
+
+// Returns
+// String	The user's G Suite domain
 
 const colorMint = "#21b778";
 const colorSaffron = "#f05e2f";
@@ -128,10 +140,29 @@ class App extends React.Component {
     this.setState({ password: e.target.value });
   };
 
+  responseGoogle = response => {
+    const { fetchRoadmap } = this.props;
+    if (response.error) {
+      console.error(response.error);
+      return;
+    }
+    console.log(response);
+    response.getHostedDomain() === "vaultintel.com" && fetchRoadmap();
+  };
+
+  // componentDidMount = () => {
+  //   gapi.load("auth2", () => {
+  //     this.auth2 = gapi.auth2.init({
+  //       client_id:
+  //         "887187479000-5re53rsg8emlnottg5rar5te1lvln8jv.apps.googleusercontent.com"
+  //     });
+  //   });
+  // };
+
   render() {
     const { roadmap, isLoading } = this.props;
-    // console.log(`is loading: ${isLoading}\nroadmap: `);
-    // !!roadmap && console.log(roadmap);
+    console.log(`is loading: ${isLoading}\nroadmap: `);
+    !!roadmap && console.log(roadmap);
 
     return (
       <AppCont>
@@ -176,28 +207,24 @@ class App extends React.Component {
         </HeaderCont>
         {!isLoading ? (
           !roadmap && (
-            // <ControlsCont>
-            //   <Password onChange={e => this.checkPassword(e)} />
+            <ControlsCont>
+              <GoogleLogin
+                clientId="887187479000-5re53rsg8emlnottg5rar5te1lvln8jv.apps.googleusercontent.com"
+                buttonText="Vault Login"
+                onSuccess={this.responseGoogle}
+                onFailure={this.responseGoogle}
+                cookiePolicy={"single_host_origin"}
+              />
+
+              {/* //   <Password onChange={e => this.checkPassword(e)} />
             //   <Generator
             //     onClick={() => {
             //       this.roadmapBtnClick();
-            //     }}
+            //     }
             //   >
             //     Go!
-            //   </Generator>
-            // </ControlsCont>
-
-            <GoogleLogin
-              clientId="184313280711.apps.googleusercontent.com"
-              buttonText="Login"
-              onSuccess={() => {
-                console.log("win");
-              }}
-              onFailure={() => {
-                console.log("fail");
-              }}
-              cookiePolicy={"single_host_origin"}
-            />
+            //   </Generator> */}
+            </ControlsCont>
           )
         ) : (
           <ControlsCont>
