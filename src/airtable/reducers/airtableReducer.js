@@ -17,18 +17,22 @@ const formatRoadmap = roadmap => {
   let roadmapGrouped = {};
 
   roadmap.data.records.map(record => {
-    // if epic doesn't exist in obj yet, create it
-    typeof roadmapGrouped[record.fields.theme] === "undefined" &&
-      (roadmapGrouped[record.fields.theme] = {
-        theme: record.fields.theme,
-        epics: [],
-        id: record.fields.theme
-          .toLowerCase()
-          .split(" ")
-          .join("")
-      });
+    if (record.fields["external visibility"]) {
+      // if epic doesn't exist in obj yet, create it
+      typeof roadmapGrouped[record.fields.theme] === "undefined" &&
+        (roadmapGrouped[record.fields.theme] = {
+          theme: record.fields.theme,
+          epics: [],
+          id: record.fields.theme
+            .toLowerCase()
+            .split(" ")
+            .join("")
+        });
 
-    return roadmapGrouped[record.fields.theme].epics.push(record);
+      return roadmapGrouped[record.fields.theme].epics.push(record);
+    } else {
+      return "";
+    }
   });
 
   Object.values(roadmapGrouped).forEach(theme => {
