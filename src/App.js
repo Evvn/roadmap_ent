@@ -46,7 +46,7 @@ const HeaderCont = styled.div`
 const Title = styled.h1`
   font-family: "Muli", "Helvetica", sans-serif;
   font-weight: 400;
-  font-size: 18px;
+  font-size: 20px;
   margin: 0;
   padding: 0;
   color: ${colorSalt};
@@ -169,7 +169,7 @@ class App extends React.Component {
         <HeaderCont>
           <Logo />
           <Title>Solo Product Roadmap</Title>
-          <div style={{ width: "150px" }}>
+          <div style={{ width: "150px", fontSize: "12px" }}>
             <div>
               <span
                 style={{

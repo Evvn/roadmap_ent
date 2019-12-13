@@ -122,6 +122,16 @@ class Roadmap extends React.Component {
     };
   }
 
+  componentDidMount = () => {
+    window.addEventListener("resize", this.onResize, true);
+  };
+
+  onResize = () => {
+    // remove lines first
+    document.querySelector("#svg-canvas").innerHTML = "";
+    this.drawLines();
+  };
+
   componentDidUpdate = () => {
     const { roadmap } = this.props;
     const { linesDrawn } = this.state;
@@ -342,13 +352,16 @@ class Roadmap extends React.Component {
     return (
       <HoverEpic style={mouseStyle}>
         <HoverEpicTitle>{f.epic}</HoverEpicTitle>
-        <HoverEpicField>
+        {/* <HoverEpicField>
           proposed release:{" "}
           {!!propRelease
             ? `${propRelease.getDate()} ${
                 months[propRelease.getMonth()]
               } ${propRelease.getFullYear()}`
             : "TBD"}
+        </HoverEpicField> */}
+        <HoverEpicField>
+          proposed release: {!!f["release q"] ? f["release q"] : "TBD"}
         </HoverEpicField>
         <HoverEpicField>
           design status: {!!f["design status"] ? f["design status"] : "TBD"}
@@ -363,7 +376,7 @@ class Roadmap extends React.Component {
   render() {
     const { roadmap } = this.props;
     const { hoverEpic } = this.state;
-    !!roadmap && console.log(roadmap);
+    // !!roadmap && console.log(roadmap);
 
     return (
       <RoadmapCont id="roadmapcont">

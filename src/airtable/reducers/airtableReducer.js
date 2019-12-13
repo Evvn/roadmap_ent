@@ -5,11 +5,21 @@ const initialState = {
   roadmap: false
 };
 
+// sort based on priority
+// const prioritize = (epicA, epicB) => {
+//   const priorityA = epicA.fields.priority;
+//   const priorityB = epicB.fields.priority;
+//   if (priorityA > priorityB) return 1;
+//   if (priorityB > priorityA) return -1;
+//   return 0;
+// };
+
+// sort based on autonumber
 const prioritize = (epicA, epicB) => {
-  const priorityA = epicA.fields.priority;
-  const priorityB = epicB.fields.priority;
-  if (priorityA > priorityB) return 1;
-  if (priorityB > priorityA) return -1;
+  const countA = epicA.fields.recordNumber;
+  const countB = epicB.fields.recordNumber;
+  if (countA > countB) return 1;
+  if (countB > countA) return -1;
   return 0;
 };
 
