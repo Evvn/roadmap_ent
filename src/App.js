@@ -41,6 +41,7 @@ const HeaderCont = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  z-index: 15;
 `;
 
 const Title = styled.h1`
@@ -129,25 +130,21 @@ class App extends React.Component {
     };
   }
 
-  roadmapBtnClick() {
-    const { fetchRoadmap } = this.props;
-    const { password } = this.state;
-    password === process.env.REACT_APP_INTERNAL_PASSWORD && fetchRoadmap();
-    // fetchRoadmap();
-  }
-
-  checkPassword = e => {
-    this.setState({ password: e.target.value });
-  };
-
   responseGoogle = response => {
     const { fetchRoadmap } = this.props;
     if (response.error) {
       console.error(response.error);
       return;
     }
-    console.log(response);
+    // console.log(response);
     response.getHostedDomain() === "vaultintel.com" && fetchRoadmap();
+  };
+
+  // DEV ONLY
+  componentDidMount = () => {
+    if (process.env.REACT_APP_ENV !== "prod") {
+      this.props.fetchRoadmap();
+    }
   };
 
   // componentDidMount = () => {
@@ -160,7 +157,7 @@ class App extends React.Component {
   // };
 
   render() {
-    const { roadmap, isLoading } = this.props;
+    const { roadmap, isLoading, roadmapGrouped } = this.props;
     console.log(`is loading: ${isLoading}\nroadmap: `);
     !!roadmap && console.log(roadmap);
 
@@ -170,39 +167,43 @@ class App extends React.Component {
           <Logo />
           <Title>Solo Product Roadmap</Title>
           <div style={{ width: "150px", fontSize: "12px" }}>
-            <div>
-              <span
-                style={{
-                  border: `1px solid ${colorSaffron}`,
-                  width: "12px",
-                  marginRight: "5px",
-                  display: "inline-block"
-                }}
-              />
-              <span>done</span>
-            </div>
-            <div>
-              <span
-                style={{
-                  border: `1px dashed ${colorSaffron}`,
-                  width: "12px",
-                  marginRight: "5px",
-                  display: "inline-block"
-                }}
-              />
-              <span>in progress</span>
-            </div>
-            <div>
-              <span
-                style={{
-                  border: `1px solid ${colorChia}`,
-                  width: "12px",
-                  marginRight: "5px",
-                  display: "inline-block"
-                }}
-              />
-              <span>not started</span>
-            </div>
+            {!!roadmap && (
+              <>
+                <div>
+                  <span
+                    style={{
+                      border: `1px solid ${colorSaffron}`,
+                      width: "12px",
+                      marginRight: "5px",
+                      display: "inline-block"
+                    }}
+                  />
+                  <span>done</span>
+                </div>
+                <div>
+                  <span
+                    style={{
+                      border: `1px dashed ${colorSaffron}`,
+                      width: "12px",
+                      marginRight: "5px",
+                      display: "inline-block"
+                    }}
+                  />
+                  <span>in progress</span>
+                </div>
+                <div>
+                  <span
+                    style={{
+                      border: `1px solid ${colorChia}`,
+                      width: "12px",
+                      marginRight: "5px",
+                      display: "inline-block"
+                    }}
+                  />
+                  <span>not started</span>
+                </div>
+              </>
+            )}
           </div>
         </HeaderCont>
         {!isLoading ? (
@@ -231,7 +232,7 @@ class App extends React.Component {
             <Loader>loading</Loader>
           </ControlsCont>
         )}
-        <Roadmap roadmap={roadmap} />
+        <Roadmap roadmap={roadmap} roadmapGrouped={roadmapGrouped} />
       </AppCont>
     );
   }
@@ -241,6 +242,7 @@ const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 
 const mapStateToProps = state => ({
   roadmap: state.airtable.roadmap,
+  roadmapGrouped: state.airtable.roadmapGrouped,
   isLoading: state.airtable.isLoading
 });
 

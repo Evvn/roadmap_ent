@@ -2,7 +2,7 @@ import * as actionTypes from "../actions/actionTypes/actionTypes.js";
 
 const initialState = {
   isLoading: false,
-  roadmap: false
+  roadmap: false,
 };
 
 // sort based on priority
@@ -23,20 +23,71 @@ const prioritize = (epicA, epicB) => {
   return 0;
 };
 
-const formatRoadmap = roadmap => {
+const groupRoadmap = (roadmap) => {
+  let groupedRoadmap = {
+    themes: [],
+    released: { themes: {} },
+    q1: { themes: {} },
+    q2: { themes: {} },
+    q3: { themes: {} },
+    q4: { themes: {} },
+    planned: { themes: {} },
+  };
+  console.log(groupedRoadmap);
+
+  Object.values(roadmap).map((t, i) => {
+    let themeObj = {};
+    themeObj[t.theme] = [];
+    groupedRoadmap.themes.push(t.theme);
+
+    groupedRoadmap.released.themes[t.theme] = { epics: [] };
+    groupedRoadmap.q1.themes[t.theme] = { epics: [] };
+    groupedRoadmap.q2.themes[t.theme] = { epics: [] };
+    groupedRoadmap.q3.themes[t.theme] = { epics: [] };
+    groupedRoadmap.q4.themes[t.theme] = { epics: [] };
+    groupedRoadmap.planned.themes[t.theme] = { epics: [] };
+  });
+
+  Object.values(roadmap).map((theme, i) => {
+    theme.epics.map((epic, k) => {
+      console.log(epic);
+      switch (epic.fields["Proposed Release Quarter"]) {
+        case "Released":
+          groupedRoadmap.released.themes[epic.fields.theme].epics.push(epic);
+          break;
+        case "Q1 CY20":
+          groupedRoadmap.q1.themes[epic.fields.theme].epics.push(epic);
+          break;
+        case "Q2 CY20":
+          groupedRoadmap.q2.themes[epic.fields.theme].epics.push(epic);
+          break;
+        case "Q3 CY20":
+          groupedRoadmap.q3.themes[epic.fields.theme].epics.push(epic);
+          break;
+        case "Q4 CY20":
+          groupedRoadmap.q4.themes[epic.fields.theme].epics.push(epic);
+          break;
+        default:
+          groupedRoadmap.planned.themes[epic.fields.theme].epics.push(epic);
+          break;
+      }
+    });
+  });
+
+  return groupedRoadmap;
+};
+
+const formatRoadmap = (roadmap) => {
   let roadmapGrouped = {};
 
-  roadmap.data.records.map(record => {
+  roadmap.data.records.map((record) => {
     if (record.fields["external visibility"]) {
       // if epic doesn't exist in obj yet, create it
       typeof roadmapGrouped[record.fields.theme] === "undefined" &&
         (roadmapGrouped[record.fields.theme] = {
           theme: record.fields.theme,
           epics: [],
-          id: record.fields.theme
-            .toLowerCase()
-            .split(" ")
-            .join("")
+          id: record.fields.theme.toLowerCase().split(" ").join(""),
         });
 
       return roadmapGrouped[record.fields.theme].epics.push(record);
@@ -45,11 +96,9 @@ const formatRoadmap = roadmap => {
     }
   });
 
-  Object.values(roadmapGrouped).forEach(theme => {
+  Object.values(roadmapGrouped).forEach((theme) => {
     theme.epics.sort(prioritize);
   });
-
-  console.log(roadmapGrouped);
 
   return roadmapGrouped;
 };
@@ -59,19 +108,20 @@ function airtableReducer(state = initialState, action) {
     case actionTypes.FETCH_ROADMAP_REQUEST:
       return {
         ...state,
-        isLoading: true
+        isLoading: true,
       };
     case actionTypes.FETCH_ROADMAP_SUCCESS:
       return {
         ...state,
         isLoading: false,
-        roadmap: formatRoadmap(action.res)
+        roadmap: formatRoadmap(action.res),
+        roadmapGrouped: groupRoadmap(formatRoadmap(action.res)),
       };
     case actionTypes.FETCH_ROADMAP_FAILURE:
       return {
         ...state,
         isLoading: false,
-        roadmap: action.error
+        roadmap: action.error,
       };
     default:
       return state;
