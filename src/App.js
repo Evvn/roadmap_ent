@@ -5,7 +5,7 @@ import { bindActionCreators } from "redux";
 import * as actions from "./airtable/actions/actions.js";
 import styled from "styled-components";
 import Roadmap from "./components/Roadmap/Roadmap";
-import GoogleLogin from "react-google-login";
+import { GoogleLogin, GoogleLogout, useGoogleLogin } from "react-google-login";
 // import { gapi } from "gapi-script";
 
 // https://developers.google.com/identity/sign-in/web/reference#users
@@ -101,7 +101,17 @@ const Loader = styled.div`
   border: none;
 `;
 
-const Password = styled.input.attrs(props => ({ type: "password" }))`
+const VaultButton = styled.button`
+  font-size: 10px;
+  padding: 4px 8px;
+  font-family: inherit;
+  border: 1px solid ${colorSaffron};
+  background-color: transparent;
+  outline: none;
+  color: ${colorSalt};
+`;
+
+const Password = styled.input.attrs((props) => ({ type: "password" }))`
   font-family: inherit;
   width: 150px;
   margin: 16px;
@@ -126,18 +136,26 @@ class App extends React.Component {
 
     this.state = {
       password: false,
-      isSignedIn: false
+      signedIn: false,
     };
   }
 
-  responseGoogle = response => {
+  responseGoogle = (response) => {
     const { fetchRoadmap } = this.props;
+
+    this.setState({ signedIn: true });
+
     if (response.error) {
       console.error(response.error);
       return;
     }
     // console.log(response);
     response.getHostedDomain() === "vaultintel.com" && fetchRoadmap();
+  };
+
+  logout = () => {
+    this.setState({ signedIn: false });
+    window.location.reload(false);
   };
 
   // DEV ONLY
@@ -157,7 +175,9 @@ class App extends React.Component {
   // };
 
   render() {
+    const { signedIn } = this.state;
     const { roadmap, isLoading, roadmapGrouped } = this.props;
+
     console.log(`is loading: ${isLoading}\nroadmap: `);
     !!roadmap && console.log(roadmap);
 
@@ -169,13 +189,26 @@ class App extends React.Component {
           <div style={{ width: "150px", fontSize: "12px" }}>
             {!!roadmap && (
               <>
+                {signedIn && (
+                  <GoogleLogout
+                    onLogoutSuccess={this.logout}
+                    render={(renderProps) => (
+                      <VaultButton
+                        onClick={renderProps.onClick}
+                        disabled={renderProps.disabled}
+                      >
+                        Log out
+                      </VaultButton>
+                    )}
+                  />
+                )}
                 <div>
                   <span
                     style={{
                       border: `1px solid ${colorSaffron}`,
                       width: "12px",
                       marginRight: "5px",
-                      display: "inline-block"
+                      display: "inline-block",
                     }}
                   />
                   <span>done</span>
@@ -186,7 +219,7 @@ class App extends React.Component {
                       border: `1px dashed ${colorSaffron}`,
                       width: "12px",
                       marginRight: "5px",
-                      display: "inline-block"
+                      display: "inline-block",
                     }}
                   />
                   <span>in progress</span>
@@ -197,7 +230,7 @@ class App extends React.Component {
                       border: `1px solid ${colorChia}`,
                       width: "12px",
                       marginRight: "5px",
-                      display: "inline-block"
+                      display: "inline-block",
                     }}
                   />
                   <span>not started</span>
@@ -211,10 +244,18 @@ class App extends React.Component {
             <ControlsCont>
               <GoogleLogin
                 clientId="887187479000-5re53rsg8emlnottg5rar5te1lvln8jv.apps.googleusercontent.com"
-                buttonText="Vault Login"
                 onSuccess={this.responseGoogle}
                 onFailure={this.responseGoogle}
                 cookiePolicy={"single_host_origin"}
+                isSignedIn={true}
+                render={(renderProps) => (
+                  <VaultButton
+                    onClick={renderProps.onClick}
+                    disabled={renderProps.disabled}
+                  >
+                    Vault log in
+                  </VaultButton>
+                )}
               />
 
               {/* //   <Password onChange={e => this.checkPassword(e)} />
@@ -238,12 +279,12 @@ class App extends React.Component {
   }
 }
 
-const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
+const mapDispatchToProps = (dispatch) => bindActionCreators(actions, dispatch);
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   roadmap: state.airtable.roadmap,
   roadmapGrouped: state.airtable.roadmapGrouped,
-  isLoading: state.airtable.isLoading
+  isLoading: state.airtable.isLoading,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
