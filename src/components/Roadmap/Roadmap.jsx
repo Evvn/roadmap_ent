@@ -101,6 +101,11 @@ const Epic = styled.div`
   }
 `;
 
+const EpicTitle = styled.div`
+  font-weight: bold;
+  font-size: 14px;
+`;
+
 const Logo = styled.div`
   background-image: url("vault_logo_onblack.png");
   background-size: contain;
@@ -295,8 +300,8 @@ class Roadmap extends React.Component {
           // }
 
           const sprints = epic.fields["sprints"] ? epic.fields["sprints"] : "";
-          const releaseQ = epic.fields["Proposed Release Quarter"]
-            ? epic.fields["Proposed Release Quarter"]
+          const releaseQ = epic.fields["proposed release quarter"]
+            ? epic.fields["proposed release quarter"]
             : "";
 
           let style =
@@ -340,6 +345,7 @@ class Roadmap extends React.Component {
               }}
             >
               {/* {epic.fields.priority} -  */}
+              <EpicTitle>{epic.fields["module/theme"]}</EpicTitle>
               {epic.fields.epic}
               {/* {epic.fields.summary} */}
             </Epic>
@@ -405,17 +411,19 @@ class Roadmap extends React.Component {
         </HoverEpicField> */}
         <HoverEpicField>
           Proposed Release:{" "}
-          {!!f["Proposed Release Quarter"]
-            ? f["Proposed Release Quarter"]
+          {!!f["proposed release quarter"]
+            ? f["proposed release quarter"]
             : "TBD"}
         </HoverEpicField>
         <HoverEpicField>
-          R&D Status:{" "}
-          {!!f["r&d progress"] ? `${f["r&d progress"] * 100}%` : "TBD"}
+          User Story Status:{" "}
+          {!!f["user story status"] ? `${f["user story status"]}` : "TBD"}
         </HoverEpicField>
         <HoverEpicField>
-          Design Status:{" "}
-          {!!f["design status"] ? `${f["design status"] * 100}%` : "TBD"}
+          Development Status: {!!f["dev status"] ? `${f["dev status"]}` : "TBD"}
+        </HoverEpicField>
+        <HoverEpicField>
+          QA Status: {!!f["qa status"] ? `${f["qa status"]}` : "TBD"}
         </HoverEpicField>
       </HoverEpic>
     );

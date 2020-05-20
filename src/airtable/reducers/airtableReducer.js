@@ -50,25 +50,24 @@ const groupRoadmap = (roadmap) => {
 
   Object.values(roadmap).map((theme, i) => {
     theme.epics.map((epic, k) => {
-      console.log(epic);
-      switch (epic.fields["Proposed Release Quarter"]) {
+      switch (epic.fields["proposed release quarter"]) {
         case "Released":
-          groupedRoadmap.released.themes[epic.fields.theme].epics.push(epic);
+          groupedRoadmap.released.themes[epic.fields.section].epics.push(epic);
           break;
         case "Q1 CY20":
-          groupedRoadmap.q1.themes[epic.fields.theme].epics.push(epic);
+          groupedRoadmap.q1.themes[epic.fields.section].epics.push(epic);
           break;
         case "Q2 CY20":
-          groupedRoadmap.q2.themes[epic.fields.theme].epics.push(epic);
+          groupedRoadmap.q2.themes[epic.fields.section].epics.push(epic);
           break;
         case "Q3 CY20":
-          groupedRoadmap.q3.themes[epic.fields.theme].epics.push(epic);
+          groupedRoadmap.q3.themes[epic.fields.section].epics.push(epic);
           break;
         case "Q4 CY20":
-          groupedRoadmap.q4.themes[epic.fields.theme].epics.push(epic);
+          groupedRoadmap.q4.themes[epic.fields.section].epics.push(epic);
           break;
         default:
-          groupedRoadmap.planned.themes[epic.fields.theme].epics.push(epic);
+          groupedRoadmap.planned.themes[epic.fields.section].epics.push(epic);
           break;
       }
     });
@@ -83,14 +82,14 @@ const formatRoadmap = (roadmap) => {
   roadmap.data.records.map((record) => {
     if (record.fields["external visibility"]) {
       // if epic doesn't exist in obj yet, create it
-      typeof roadmapGrouped[record.fields.theme] === "undefined" &&
-        (roadmapGrouped[record.fields.theme] = {
-          theme: record.fields.theme,
+      typeof roadmapGrouped[record.fields.section] === "undefined" &&
+        (roadmapGrouped[record.fields.section] = {
+          theme: record.fields.section,
           epics: [],
-          id: record.fields.theme.toLowerCase().split(" ").join(""),
+          id: record.fields.section.toLowerCase().split(" ").join(""),
         });
 
-      return roadmapGrouped[record.fields.theme].epics.push(record);
+      return roadmapGrouped[record.fields.section].epics.push(record);
     } else {
       return "";
     }

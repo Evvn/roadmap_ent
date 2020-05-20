@@ -11,20 +11,20 @@ export function* fetchRoadmap(action) {
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${process.env.REACT_APP_AIRTABLE_API_KEY}`
-          }
+            Authorization: `Bearer ${process.env.REACT_APP_AIRTABLE_API_KEY}`,
+          },
         }
       )
-      .then(response => response);
+      .then((response) => response);
     yield put({
       type: actionTypes.FETCH_ROADMAP_SUCCESS,
-      res
+      res,
     });
   } catch (error) {
     console.log(error);
     yield put({
       type: actionTypes.FETCH_ROADMAP_FAILURE,
-      error
+      error,
     });
   }
 }

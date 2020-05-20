@@ -185,7 +185,7 @@ class App extends React.Component {
       <AppCont>
         <HeaderCont>
           <Logo />
-          <Title>Solo Product Roadmap</Title>
+          <Title>Vault Enterprise Roadmap</Title>
           <div style={{ width: "150px", fontSize: "12px" }}>
             {!!roadmap && (
               <>
