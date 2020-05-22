@@ -299,20 +299,47 @@ class Roadmap extends React.Component {
           //   return "";
           // }
 
-          const sprints = epic.fields["sprints"] ? epic.fields["sprints"] : "";
-          const releaseQ = epic.fields["proposed release quarter"]
-            ? epic.fields["proposed release quarter"]
+          const devStatus = epic.fields["dev status"]
+            ? epic.fields["dev status"]
+            : "";
+          const released = epic.fields["released"]
+            ? epic.fields["released"]
             : "";
 
+          // let style = {};
+          // if (released !== "") {
+          //   style = {
+          //     border: doneBorder,
+          //     // borderWidth: "2px",
+          //     // color: "#252525"
+          //     // backgroundColor: "rgba(240, 94, 47, 1)"
+          //   };
+          // } else if (devStatus !== "Not started" || devStatus === "") {
+          //   style = {
+          //     border: underwayBorder,
+          //     // borderRight: `4px solid ${colorMint}`,
+          //     // borderBottom: `4px solid ${colorMint}`,
+          //     // color: "#252525"
+          //     // backgroundColor: "rgba(240, 94, 47, .7)"
+          //   };
+          // } else {
+          //   style = {
+          //     border: incompleteBorder,
+          //     // borderWidth: "2px"
+          //     // color: "#252525"
+          //     // backgroundColor: "rgba(240, 94, 47, .3)"
+          //   };
+          // }
+
           let style =
-            releaseQ === "Released"
+            released !== ""
               ? {
                   border: doneBorder,
                   // borderWidth: "2px",
                   // color: "#252525"
                   // backgroundColor: "rgba(240, 94, 47, 1)"
                 }
-              : sprints !== ""
+              : devStatus !== "Not started" && devStatus !== ""
               ? {
                   border: underwayBorder,
                   // borderRight: `4px solid ${colorMint}`,
@@ -330,7 +357,7 @@ class Roadmap extends React.Component {
           return (
             <Epic
               className={
-                sprints === "Done" || sprints === "Underway"
+                devStatus === "Done" || devStatus === "Underway"
                   ? "orangeHover"
                   : "greyHover"
               }
