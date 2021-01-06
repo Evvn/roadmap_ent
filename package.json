@@ -5,7 +5,7 @@
   "private": true,
   "dependencies": {
     "airtable": "^0.7.2",
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "gapi-script": "^1.0.1",
     "gh-pages": "^2.1.1",
     "react": "^16.10.2",
